@@ -1,14 +1,14 @@
 package main
 
 import (
-	envflag "github.com/cathy-go-learning/http-server/pkg/envflag"
+	//"github.com/cathy-go-learning/http-server/pkg/envflag"
 	"io"
 	"log"
 	"net/http"
 )
 
 func main() {
-	envflag.Parse()
+	//envflag.Parse()
 
 	http.HandleFunc("/home", home)
 	http.HandleFunc("/healthz", healthz)
@@ -33,7 +33,7 @@ func home(writer http.ResponseWriter, request *http.Request) {
 			writer.Header().Add(k, v)
 		}
 	}
-	writer.Header().Add("VERSION", *envflag.Version)
+	//writer.Header().Add("VERSION", *envflag.Version)
 	_, err := io.WriteString(writer, "hello server!")
 	if err != nil {
 		log.Fatal(err)
