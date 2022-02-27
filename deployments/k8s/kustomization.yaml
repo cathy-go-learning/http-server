@@ -1,0 +1,6 @@
+commonLabels:
+  app.kubernetes.io/name: http-server
+resources:
+  - image-secrets.yaml
+  - configmap.yaml
+  - deployment.yaml
