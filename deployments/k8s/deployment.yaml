@@ -9,7 +9,7 @@ spec:
       maxSurge: 25%
       maxUnavailable: 25%
     type: RollingUpdate
-  selector: {}  # Automatically populated by the commonLabels
+  selector: {}
   template:
     spec:
       containers:

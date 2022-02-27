@@ -1,14 +1,15 @@
 package main
 
 import (
-	//"github.com/cathy-go-learning/http-server/pkg/envflag"
+	"github.com/cathy-go-learning/http-server/pkg/envflag"
 	"io"
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
-	//envflag.Parse()
+	envflag.Parse()
 
 	http.HandleFunc("/home", home)
 	http.HandleFunc("/healthz", healthz)
