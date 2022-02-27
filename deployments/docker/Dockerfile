@@ -16,7 +16,7 @@ RUN git config --global url."https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/"
     go mod download -x -json && \
     git config --global --remove-section url."https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/"
 
-COPY .. $GOPATH/src/github.com/cathy-go-learning/http-server
+COPY . $GOPATH/src/github.com/cathy-go-learning/http-server
 
 
 RUN cd $GOPATH/src/github.com/cathy-go-learning/http-server/cmd  && \
