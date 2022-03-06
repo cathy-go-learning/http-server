@@ -1,6 +1,11 @@
 commonLabels:
   app.kubernetes.io/name: http-server
+namespace: k8s-learning
 resources:
+  - issuer.yaml
   - image-secrets.yaml
+  - certificate.yaml
   - configmap.yaml
   - deployment.yaml
+  - service.yaml
+  - ingress.yaml
