@@ -1,0 +1,9 @@
+commonLabels:
+  app.kubernetes.io/managed-by: kustomize
+commonAnnotations:
+  reloader.stakater.com/auto: "true"
+generatorOptions:
+  disableNameSuffixHash: true
+resources:
+  - monitoring
+  - http-server

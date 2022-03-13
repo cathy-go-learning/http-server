@@ -1,11 +1,18 @@
 package metrics
 
 import (
-	"math"
-	"time"
-
+	"fmt"
+	"github.com/cathy-go-learning/http-server/pkg/envflag"
 	"github.com/prometheus/client_golang/prometheus"
+	"time"
 )
+
+func Register() {
+	err := prometheus.Register(functionLatency)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
 
 // ExecutionTimer measures execution time of a computation, split into major steps
 // usual usage pattern is: timer := NewExecutionTimer(...) ; compute ; timer.ObserveStep() ; ... ; timer.ObserveTotal()
@@ -15,14 +22,20 @@ type ExecutionTimer struct {
 	last  time.Time
 }
 
-const (
-	// TopMetricsNamespace is a prefix for all VPA-related metrics namespaces
-	TopMetricsNamespace = "vpa_"
+var (
+	functionLatency = CreateExecutionTimeMetric(envflag.PrometheusNamespace, "Time spent.")
+)
 
+const (
 	// MaxVpaSizeLog - The metrics will distinguish VPA sizes up to 2^MaxVpaSizeLog (~1M)
 	// Anything above that size will be reported in the top bucket.
 	MaxVpaSizeLog = 20
 )
+
+// NewExecutionTimer provides a timer for Updater's RunOnce execution
+func NewTimer() *ExecutionTimer {
+	return NewExecutionTimer(functionLatency)
+}
 
 // NewExecutionTimer provides a timer for admission latency; call ObserveXXX() on it to measure
 func NewExecutionTimer(histo *prometheus.HistogramVec) *ExecutionTimer {
@@ -50,25 +63,11 @@ func (t *ExecutionTimer) ObserveTotal() {
 func CreateExecutionTimeMetric(namespace string, help string) *prometheus.HistogramVec {
 	return prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
-			Namespace: namespace,
+			Namespace: envflag.PrometheusNamespace,
 			Name:      "execution_latency_seconds",
 			Help:      help,
 			Buckets: []float64{0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0,
 				20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 120.0, 150.0, 240.0, 300.0},
 		}, []string{"step"},
 	)
-}
-
-// GetVpaSizeLog2 returns a bucket number for a metric labelled with number of Pods under a given VPA.
-// It is basically log2(vpaSize), capped to MaxVpaSizeLog
-func GetVpaSizeLog2(vpaSize int) int {
-	if vpaSize == 0 {
-		return 0
-	}
-
-	ret := int(math.Log2(float64(vpaSize)))
-	if ret > MaxVpaSizeLog {
-		return MaxVpaSizeLog
-	}
-	return ret
 }
