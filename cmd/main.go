@@ -1,18 +1,21 @@
 package main
 
 import (
+	"github.com/cathy-go-learning/http-server/metrics"
 	"github.com/cathy-go-learning/http-server/pkg/envflag"
 	"io"
 	"log"
 	"net/http"
-	"time"
 )
 
 func main() {
 	envflag.Parse()
+	metrics.Register()
+	mux := http.NewServeMux()
 
-	http.HandleFunc("/home", home)
-	http.HandleFunc("/healthz", healthz)
+	mux.HandleFunc("/home", home)
+	mux.HandleFunc("/healthz", healthz)
+	mux.Handle("/metrics", promhttp.Handler())
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal(err)
