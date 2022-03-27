@@ -7,5 +7,9 @@ spec:
   dnsNames:
     - http-server.cathy.learning
   issuerRef:
+    group: cert-manager.io
     name: letsencrypt-prod
     kind: Issuer
+  usages:
+  - digital signature
+  - key encipherment

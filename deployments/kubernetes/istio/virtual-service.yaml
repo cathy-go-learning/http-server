@@ -1,0 +1,25 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: http-server
+spec:
+  gateways:
+    - http-server
+  hosts:
+    - http-server.cathy.learning
+  http:
+    - match:
+        - port: 443
+      route:
+        - destination:
+            host: http-server.default.svc.cluster.local
+            port:
+              number: 80
+      fault:
+        abort:
+          httpStatus: 500
+          percentage:
+            value: 20
+        delay:
+          percent: 20
+          fixedDelay: 5s
